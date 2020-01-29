@@ -1,0 +1,33 @@
+{
+  "name": "autocouch",
+  "version": "1.0.0",
+  "description": "This package combines the CRDT capacities of Automerge with the replication featores of CouchDB. It focuses on an object oriented code style.",
+  "main": "dist/index",
+  "typings": "dist/index",
+  "scripts": {
+    "prepublishOnly": "npm run compile",
+    "compile": "npm run clean && tsc -p .",
+    "watch": "tsc -w -p .",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "crdt",
+    "replication",
+    "database"
+  ],
+  "author": "Grosch, Pascal and Krafft, Roman and Wölki, Marcel",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^13.1.8",
+    "@types/pouchdb": "^6.4.0",
+    "@types/uuid": "^3.4.6",
+    "automerge": "^0.12.1",
+    "pouchdb": "^7.1.1",
+    "uuid": "^3.4.0"
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/lib"
+  ]
+}
