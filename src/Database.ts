@@ -64,7 +64,17 @@ switch(process.env.NODE_ENV) {
         db = new Database('testPouchDB', 'testCouchDB');
         break;
     default:
-        db = new Database('databasePouchDB', 'Please enter the server address here');
+        let local = process.env.AUTOCOUCH_LOCAL_DB;
+        let global = process.env.AUTOCOUCH_GLOBAL_DB;
+        if(!local) {
+            console.warn('Location of local PouchDB not set, using \'localPouchDB\'. Set the variable AUTOCOUCH_LOCAL_DB to use your own location.');
+            local = 'localPouchDB';
+        }
+        if(!global) {
+            console.warn('Address of global CouchDB not set, using local fallback \'globalPouchDB\'. Set the variable AUTOCOUCH_GLOBAL_DB to use your own address.');
+            global = 'globalPouchDB';
+        }
+        db = new Database(local, global);
 }
 
 export var db: Database;

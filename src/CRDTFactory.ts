@@ -1,24 +1,24 @@
 import Automerge from 'automerge'
-import { AutomergeCRDT, AutoCouchObject } from './AutomergeCRDT'
+import { AutoCouchCRDT, AutoCouchObject } from './AutoCouchCRDT'
 import { db } from './Database'
 import { standardCatch } from './Utils'
 
 class CRDTFactory {
 
-    private createFunctions: Map<string, (...parameters: any) => AutomergeCRDT<any>>;
-    private loadFunctions: Map<string, (doc: Automerge.Doc<any>) => AutomergeCRDT<any>>;
+    private createFunctions: Map<string, (...parameters: any) => AutoCouchCRDT<any>>;
+    private loadFunctions: Map<string, (doc: Automerge.Doc<any>) => AutoCouchCRDT<any>>;
 
     public constructor() {
         this.createFunctions = new Map();
         this.loadFunctions = new Map();
     }
 
-    public registerType<R, T extends AutomergeCRDT<R>>(typeName: string, createFunction: (...parameters: any) => T, loadFunction: (doc: Automerge.Doc<R>) => T) {
+    public registerType<R, T extends AutoCouchCRDT<R>>(typeName: string, createFunction: (...parameters: any) => T, loadFunction: (doc: Automerge.Doc<R>) => T) {
         this.createFunctions.set(typeName, createFunction);
         this.loadFunctions.set(typeName, loadFunction);
     }
 
-    public createObject<R, T extends AutomergeCRDT<R>>(typeName: string, ...parameters: any): T {
+    public createObject<R, T extends AutoCouchCRDT<R>>(typeName: string, ...parameters: any): T {
         let create = this.createFunctions.get(typeName);
         if(create) {
             return <T>create(...parameters);
@@ -27,7 +27,7 @@ class CRDTFactory {
         }
     }
 
-    public async loadObject<R, T extends AutomergeCRDT<R>>(objectId: string): Promise<T> {
+    public async loadObject<R, T extends AutoCouchCRDT<R>>(objectId: string): Promise<T> {
         return db.get(objectId).then((doc: any) => {
             let automergeDoc: Automerge.Doc<AutoCouchObject<R>> = Automerge.applyChanges(Automerge.init(), doc.changes);
             let typeName = automergeDoc.objectType;

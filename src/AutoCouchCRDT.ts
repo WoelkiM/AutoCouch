@@ -9,7 +9,7 @@ export type AutoCouchObject<T> = {
     object: T
 }
 
-export abstract class AutomergeCRDT<T> {
+export abstract class AutoCouchCRDT<T> {
 
     private automergeDoc: Automerge.Doc<AutoCouchObject<T>>;
     private rev: any;
@@ -146,4 +146,4 @@ export function getDescendantProp(obj: any, path: string): any {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
-export default AutomergeCRDT;
+export default AutoCouchCRDT;

@@ -67,3 +67,5 @@ build/
 /testCouchDB
 /testPouchDB
 /databasePouchDB
+
+.vscode/
