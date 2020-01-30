@@ -2,6 +2,11 @@
   "name": "autocouch",
   "version": "1.0.0",
   "description": "This package combines the CRDT capacities of Automerge with the replication featores of CouchDB. It focuses on an object oriented code style.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WoelkiM/AutoCouch"
+  },
+  "homepage": "https://github.com/WoelkiM/AutoCouch#README.md",
   "main": "dist/index",
   "typings": "dist/index",
   "scripts": {
@@ -15,7 +20,8 @@
     "replication",
     "database"
   ],
-  "author": "Grosch, Pascal and Krafft, Roman and Wölki, Marcel",
+  "author": "Pascal Grosch",
+  "contributors": ["Roman Krafft, Marcel Wölki"],
   "license": "MIT",
   "dependencies": {
     "@types/node": "^13.1.8",
