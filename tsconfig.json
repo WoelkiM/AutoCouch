@@ -65,7 +65,8 @@
   },
   "include": [
     "test/**/*.ts",
-    "lib/**/*.ts",
+    "test/**/*.js",
+    "src/**/*.ts",
     "./index.ts"
   ]
 }

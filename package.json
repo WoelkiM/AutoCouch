@@ -13,7 +13,8 @@
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc -p .",
     "watch": "tsc -w -p .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "cross-env NODE_ENV=test jasmine"
   },
   "keywords": [
     "crdt",
@@ -21,13 +22,20 @@
     "database"
   ],
   "author": "Pascal Grosch",
-  "contributors": ["Roman Krafft, Marcel Wölki"],
+  "contributors": [
+    "Roman Krafft, Marcel Wölki"
+  ],
   "license": "MIT",
   "dependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/register": "^7.8.3",
     "@types/node": "^13.1.8",
     "@types/pouchdb": "^6.4.0",
     "@types/uuid": "^3.4.6",
     "automerge": "^0.12.1",
+    "cross-env": "^7.0.0",
+    "jasmine": "^3.5.0",
+    "jasmine-enzyme": "^7.1.2",
     "pouchdb": "^7.1.1",
     "uuid": "^3.4.0"
   },

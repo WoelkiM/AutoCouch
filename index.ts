@@ -4,4 +4,11 @@ import { db } from "./src/Database"
 import { registry } from "./src/ObjectRegistry"
 import { standardCatch } from "./src/Utils"
 
-export { AutoCouchCRDT, getDescendantProp, factory, db, registry, standardCatch }
+export {
+    AutoCouchCRDT,
+    getDescendantProp,
+    factory,
+    db,
+    registry,
+    standardCatch
+}
