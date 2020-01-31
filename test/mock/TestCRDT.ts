@@ -1,4 +1,4 @@
-import AutomergeCRDT from "../../AutomergeCRDT";
+import AutomergeCRDT from "../../src/AutoCouchCRDT";
 import uuid from "uuid";
 
 type TestObject = {

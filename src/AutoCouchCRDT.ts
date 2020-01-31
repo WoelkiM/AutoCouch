@@ -3,18 +3,31 @@ import uuid from 'uuid'
 import { registry } from './ObjectRegistry'
 import { db } from './Database'
 
+/**
+ * Base type of the internal AutoCouch type that contains the ID and type of the object
+ */
 export type AutoCouchObject<T> = {
     objectId: string,
     objectType: string,
     object: T
 }
 
+/**
+ * Abstract base that implements merging and replication of CRDTs.
+ */
 export abstract class AutoCouchCRDT<T> {
 
     private automergeDoc: Automerge.Doc<AutoCouchObject<T>>;
     private rev: any;
     private handlers: {(data?: any): void; }[];
 
+    /**
+     * Constructs a new AutoCouch object with either the type, id and object or from an internal Automerge document.
+     * @param objectType type identifier
+     * @param objectId unique object ID
+     * @param object internal JSON object that needs to be pure
+     * @param automergeDoc optional internal document. If it is defined the other parameters are ignored and the object is instantiated with this document instead.
+     */
     constructor(objectType: string, objectId: string, object: T, automergeDoc?: Automerge.Doc<AutoCouchObject<T>>) {
         if(automergeDoc) {
             this.automergeDoc = automergeDoc;
@@ -37,10 +50,18 @@ export abstract class AutoCouchCRDT<T> {
         this.handlers = [];
     }
 
+    /**
+     * Registers handlers for the event of an update caused by syncing with the database.
+     * @param handler function to be called when the objected is update by syncing with the database
+     */
     public on(handler: { (data?: any): void }) : void {
         this.handlers.push(handler);
     }
 
+    /**
+     * Deregisters the given handler from update events.
+     * @param handler function to be deregistered
+     */
     public off(handler: { (data?: any): void }) : void {
         this.handlers = this.handlers.filter(h => h !== handler);
     }
@@ -49,6 +70,10 @@ export abstract class AutoCouchCRDT<T> {
         this.handlers.slice(0).forEach(h => h());
     }
 
+    /**
+     * Changes the internal object and replicates the changes.
+     * @param changeFn callback that mutates the internal object
+     */
     public async change(changeFn: (obj: T) => void) {
         this.automergeDoc = Automerge.change(this.automergeDoc, (automergeDoc) => {
             changeFn(automergeDoc.object);
@@ -56,21 +81,36 @@ export abstract class AutoCouchCRDT<T> {
         await this.update();
     }
 
+    /**
+     * Gets the internal object.
+     * @returns immutable version of the internal object
+     */
     public getObject(): Automerge.Freeze<T> {
         return this.automergeDoc.object;
     }
 
+    /**
+     * Gets the object ID.
+     * @returns ID of the object that is used in the registry and database
+     */
     public getObjectId(): string {
         return this.automergeDoc.objectId;
     }
 
+    /**
+     * Gets the object type.
+     * @returns type identifier of the object
+     */
     public getObjectType(): string {
         return this.automergeDoc.objectType;
     }
 
-    public removeFromDatabase(): void {
+    /**
+     * Removes this object from the registry and database.
+     */
+    public async removeFromDatabase(): Promise<void> {
         registry.deregisterObject(this.getObjectId());
-        db.remove(this.getObjectId(), this.rev);
+        await db.remove(this.getObjectId(), this.rev);
     }
 
     private syncFunction(): void {
