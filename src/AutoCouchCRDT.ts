@@ -2,6 +2,7 @@ import Automerge from 'automerge'
 import uuid from 'uuid'
 import { registry } from './ObjectRegistry'
 import { db } from './Database'
+import { standardCatch } from './Utils'
 
 /**
  * Base type of the internal AutoCouch type that contains the ID and type of the object
@@ -116,9 +117,7 @@ export abstract class AutoCouchCRDT<T> {
     private syncFunction(): void {
         db.sync().on('change', (info: PouchDB.Replication.SyncResult<{}>) => {
             this.changeFunction(info);
-        }).on('error', function (err) {
-            throw Error("error occur" );//+ err.toString());
-        });
+        }).on('error', standardCatch("syncFunction"));
     }
 
     private changeFunction(info: PouchDB.Replication.SyncResult<{}>): void {
@@ -129,11 +128,9 @@ export abstract class AutoCouchCRDT<T> {
             try {
                 this.my_trigger();
             }catch(err) {
-                console.log(err);
+                standardCatch("myTrigger")(err);
             }
-        }).catch(function (err) {
-            throw Error("error occur" + err.toString());
-        });
+        }).catch(standardCatch("changeFunction"));
     }
 
     private conflictFunction(pouchDoc: any,obj:any): void {
@@ -143,25 +140,19 @@ export abstract class AutoCouchCRDT<T> {
                 try {
                     db.get(this.getObjectId(), {rev: con})
                         .then((pouchObject) => this.mergeFunction(pouchObject)).catch(function (err) {
-                        //TODO: If an error occurs, the changeFunction is called again. Please check.
                         obj.changeFunction();
-                        // throw Error("error occur" + err.toString());
                     });
-                    db.remove(this.getObjectId(), con).catch(err => {
-                        console.error(err);
+                    db.remove(this.getObjectId(), con).catch(_err => {
                         obj.changeFunction();
                     });
                 }catch (err) {
-                    //TODO: i´m not 100% sure if this try/catch is needed.
-                    //throw Error("error occur" + err.toString());
+                    console.error(err);
                 }
             }
-            //In the old version, this was outside the if clause. Please check.
             pouchDoc._conflicts = [];
             pouchDoc.changes = Automerge.getChanges(Automerge.init(), this.automergeDoc);
             db.put(pouchDoc).catch((err) => {
                 obj.changeFunction();
-                //throw Error("error occur" + err.toString());
             }).then(_ => db.get(this.getObjectId()).then(doc => this.rev = doc._rev));
         }
     }
