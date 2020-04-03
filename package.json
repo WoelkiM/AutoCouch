@@ -34,8 +34,6 @@
     "@types/uuid": "^3.4.6",
     "automerge": "^0.12.1",
     "cross-env": "^7.0.0",
-    "jasmine": "^3.5.0",
-    "jasmine-enzyme": "^7.1.2",
     "pouchdb": "^7.1.1",
     "uuid": "^3.4.0"
   },
