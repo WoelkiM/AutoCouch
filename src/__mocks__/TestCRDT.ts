@@ -1,4 +1,4 @@
-import AutomergeCRDT from "../../src/AutoCouchCRDT";
+import AutomergeCRDT from "../AutoCouchCRDT";
 import uuid from "uuid";
 
 type TestObject = {
@@ -8,7 +8,7 @@ type TestObject = {
 export class TestCRDT extends AutomergeCRDT<TestObject> {
 
     constructor() {
-        super("Test", uuid.v4(), {testFlag: false}, undefined)
+        super("Test", uuid.v4(), {testFlag: false}, undefined);
     }
 
     public getTestFlag(): boolean {
@@ -19,6 +19,10 @@ export class TestCRDT extends AutomergeCRDT<TestObject> {
         this.change(obj => {
             obj.testFlag = value;
         })
+    }
+
+    public retrieveHandlers(): ((data?: any) => void)[] {
+        return this.getHandlers();
     }
 }
 

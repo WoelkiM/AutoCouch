@@ -1,7 +1,7 @@
 {
   "name": "autocouch",
   "version": "1.0.0",
-  "description": "This package combines the CRDT capacities of Automerge with the replication featores of CouchDB. It focuses on an object oriented code style.",
+  "description": "This package combines the CRDT capacities of Automerge with the replication features of CouchDB. It focuses on an object oriented code style.",
   "repository": {
     "type": "git",
     "url": "https://github.com/WoelkiM/AutoCouch"
@@ -11,10 +11,12 @@
   "typings": "dist/index",
   "scripts": {
     "prepublishOnly": "npm run compile",
-    "compile": "npm run clean && tsc -p .",
+    "compile": "npm run clean && tsc",
     "watch": "tsc -w -p .",
     "clean": "rm -rf dist",
-    "test": "cross-env NODE_ENV=test jasmine"
+    "test": "cross-env NODE_ENV=test jest --config jestconfig.json",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json"
   },
   "keywords": [
     "crdt",
@@ -27,8 +29,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/register": "^7.8.3",
     "@types/node": "^13.1.8",
     "@types/pouchdb": "^6.4.0",
     "@types/uuid": "^3.4.6",
@@ -38,8 +38,18 @@
     "uuid": "^3.4.0"
   },
   "files": [
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/lib"
-  ]
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@types/jest": "^25.2.1",
+    "babel-jest": "^25.2.6",
+    "jest": "^25.2.7",
+    "prettier": "^2.0.2",
+    "ts-jest": "^25.3.1",
+    "tslint": "^6.1.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.8.3"
+  }
 }

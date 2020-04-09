@@ -1,12 +1,12 @@
-import { db } from '../components/crdts/automerge/Database'
-import TestCRDT from "./mock/TestCRDT";
+import { db } from '../Database'
+import TestCRDT from "../__mocks__/TestCRDT";
 
 describe("AutomergeCRDT_Suite", function() {
     afterAll(() => {
         //db.clean();
     })
     describe("The update handler", function() {
-        var crdt;
+        var crdt: TestCRDT;
         beforeEach(()=>{
             crdt = new TestCRDT();
         });
@@ -15,10 +15,10 @@ describe("AutomergeCRDT_Suite", function() {
         });
         it("is registered", function () {
             crdt.on(() => {
-                this.setTestFlag(true);
+                crdt.setTestFlag(true);
             });
-            expect(crdt.handlers).toBeDefined();
-            expect(crdt.handlers.length).toBe(1);
+            expect(crdt.retrieveHandlers()).toBeDefined();
+            expect(crdt.retrieveHandlers().length).toBe(1);
         });
         it("is deregistered", function () {
             var test = () => {
@@ -27,30 +27,32 @@ describe("AutomergeCRDT_Suite", function() {
             crdt.on(test);
             crdt.off(test);
 
-            expect(crdt.handlers).toBeDefined();
-            expect(crdt.handlers.length).toBe(0);
+            expect(crdt.retrieveHandlers()).toBeDefined();
+            expect(crdt.retrieveHandlers().length).toBe(0);
         });
         // Integration tests
-        it("is called from the database (change the Document)", function () {
+        test("is called from the database (change the Document)", function () {
             let handler = {
                 handle: function() {
-                    crdt.setTestFlag(true);
+                    //crdt.setTestFlag(true);
+                    console.log("handle");
                 }
             }
             crdt.on(handler.handle);
-            spyOn(handler, "handle").and.callThrough();
+            spyOn(handler, "handle");
             db.sync().emit("change");
             expect(handler.handle).toHaveBeenCalled();
-            expect(crdt.getTestFlag()).toBeTrue();
+            expect(crdt.getTestFlag()).toBe(true);
         });
         it("is called from the database with an error (change the Document)", function () {
             let handler = {
                 handle: function() {
-                    crdt.setTestFlag(true);
+                    //crdt.setTestFlag(true);
+                    console.log("handle");
                 }
             }
             crdt.on(handler.handle);
-            spyOn(handler, "handle").and.callThrough();
+            spyOn(handler, "handle");
             try {
                 db.sync().emit("error");
                 expect(handler.handle).not.toHaveBeenCalled();
@@ -60,7 +62,7 @@ describe("AutomergeCRDT_Suite", function() {
         });
     });
     describe("The document is changed", () => {
-        var crdt;
+        var crdt: TestCRDT;
         beforeEach(() => {
             crdt = new TestCRDT();
         });
@@ -69,11 +71,11 @@ describe("AutomergeCRDT_Suite", function() {
         });
         it("locally", () => {
             crdt.setTestFlag(true)
-            expect(crdt.getTestFlag()).toBeTrue();
+            expect(crdt.getTestFlag()).toBe(true);
         });
     });
     describe("The internal object", () => {
-        var crdt;
+        var crdt: TestCRDT;
         beforeEach(() => {
             crdt = new TestCRDT();
         });
@@ -83,8 +85,7 @@ describe("AutomergeCRDT_Suite", function() {
         it("is defined", () => {
             crdt.setTestFlag(true);
             expect(crdt.getObject()).toBeDefined();
-            expect(crdt.getObject().testFlag).toBeTrue();
+            expect(crdt.getObject().testFlag).toBe(true);
         });
     });
 });
-
