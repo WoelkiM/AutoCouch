@@ -1,6 +1,6 @@
 {
   "name": "autocouch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This package combines the CRDT capacities of Automerge with the replication features of CouchDB. It focuses on an object oriented code style.",
   "repository": {
     "type": "git",
