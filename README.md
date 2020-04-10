@@ -34,6 +34,11 @@ It can be used to save special documents of your application under a globally kn
 ``ObjectRegistry`` is a simple registry and cache that stores an object under its ID and loads it from the database if it is not found.
 It can be used to reference objects from a CRDT container.
 
+### Choosing the Database
+
+To choose which database holds the local replication set the environment variable ``AUTOCOUCH_LOCAL_DB``.
+To set the address of the global database set the environment variable ``AUTOCOUCH_GLOBAL_DB``.
+
 ### Example Usage
 
 An example of how the framework is integrated in a React based web-app can be found at [Polly](https://github.com/WoelkiM/Polly_React_Example_AutoCouch).
