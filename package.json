@@ -9,6 +9,7 @@
   "homepage": "https://github.com/WoelkiM/AutoCouch#README.md",
   "main": "dist/index",
   "typings": "dist/index",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc",
